@@ -1,5 +1,6 @@
 #!/bin/bash
-sudo apt install sssd-ad sssd-tools realmd adcli -y
+sudo apt-get update && upgrade -y
+sudo apt-get install sssd-ad sssd-tools realmd adcli -y
 echo "Enter The Domain Name:"
 read -r nazwa_domeny
 echo "Enter The Login Of The User Who Has The Right To Join The Computer To The Domain:"
