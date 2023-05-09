@@ -33,7 +33,9 @@ if [ -d /etc/lightdm/lightdm.conf.d/ ]; then
     fi
   fi
 fi
-sudo service lightdm restart
+if systemctl status lightdm.service &> /dev/null; then
+    systemctl restart lightdm.service
+fi
 systemctl restart sssd
 t_n="t"
 while [[ "$t_n" == "t" ]]; do
