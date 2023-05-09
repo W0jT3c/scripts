@@ -36,6 +36,8 @@ fi
 if systemctl status lightdm.service &> /dev/null; then
     systemctl restart lightdm.service
 fi
+sudo cp /usr/lib/x86_64-linux-gnu/sssd/conf/sssd.conf /etc/sssd/
+sudo chmod 600 /etc/sssd/sssd.conf
 systemctl restart sssd
 t_n="t"
 while [[ "$t_n" == "t" ]]; do
