@@ -16,6 +16,24 @@ while [[ "$t_n" == "t" ]]; do
 done
 echo "access_provider = simple" >> /etc/sssd/sssd.conf
 sudo pam-auth-update --enable mkhomedir
+if [ -d /usr/share/lightdm/lightdm.conf.d/ ]; then
+  if ! grep -q "greeter-show-manual-login=true" /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf; then
+    echo "greeter-show-manual-login=true" >> /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf
+    sed -i 'greeter-show-manual-login=false' /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf
+    if  grep -q "greeter-show-manual-login=false" /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf; then
+    sed -i 'greeter-show-manual-login=false' /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf
+    fi
+  fi
+fi
+if [ -d /etc/lightdm/lightdm.conf.d/ ]; then
+  if ! grep -q "greeter-show-manual-login=true" /etc/lightdm/lightdm.conf.d/50-unity-greeter.conf; then
+    echo "greeter-show-manual-login=true" >> /etc/lightdm/lightdm.conf.d/50-unity-greeter.conf
+    if  grep -q "greeter-show-manual-login=false" /etc/lightdm/lightdm.conf.d/50-unity-greeter.conf; then
+    sed -i 'greeter-show-manual-login=false' /etc/lightdm/lightdm.conf.d/50-unity-greeter.conf
+    fi
+  fi
+fi
+sudo service lightdm restart
 systemctl restart sssd
 t_n="t"
 while [[ "$t_n" == "t" ]]; do
