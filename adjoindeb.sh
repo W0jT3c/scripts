@@ -7,7 +7,10 @@ echo "Enter The Domain Name:"
 read -r nazwa_domeny
 echo "Enter The Login Of The User Who Has The Right To Join The Computer To The Domain:"
 read -r nazwa_uzytkownika_administratora
-sudo realm join -v ${nazwa_domeny} -U $nazwa_uzytkownika_administratora@${nazwa_domeny}
+if ! sudo realm join -v ${nazwa_domeny} -U $nazwa_uzytkownika_administratora@${nazwa_domeny}; then
+    echo "Exit"
+    exit 1
+fi
 t_n="t"
 while [[ "$t_n" == "t" ]]; do
   echo "Enter A The Name Of The Group That Should Be Allowed To Log In(Name Displayed In Lowercase Letters With Spaces):"
@@ -48,5 +51,5 @@ while [[ "$t_n" == "t" ]]; do
   echo "Add Another Group? (t/n)"
   read t_n
 done
-echo "Script finished."
+echo "Script Finished."
 exit
