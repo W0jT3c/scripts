@@ -1,6 +1,8 @@
 #!/bin/bash
 sudo apt-get update && upgrade -y
 sudo apt-get install sssd-ad sssd-tools realmd adcli krb5-user -y
+sudo cp /usr/lib/x86_64-linux-gnu/sssd/conf/sssd.conf /etc/sssd/
+sudo chmod 600 /etc/sssd/sssd.conf
 echo "Enter The Domain Name:"
 read -r nazwa_domeny
 echo "Enter The Login Of The User Who Has The Right To Join The Computer To The Domain:"
@@ -36,8 +38,6 @@ fi
 if systemctl status lightdm.service &> /dev/null; then
     systemctl restart lightdm.service
 fi
-sudo cp /usr/lib/x86_64-linux-gnu/sssd/conf/sssd.conf /etc/sssd/
-sudo chmod 600 /etc/sssd/sssd.conf
 systemctl restart sssd
 t_n="t"
 while [[ "$t_n" == "t" ]]; do
