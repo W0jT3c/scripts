@@ -64,5 +64,5 @@ while [[ "$t_n" == "t" ]]; do
   echo "Add Another Group? (t/n)"
   read t_n
 done
-echo "Script Finished."
+echo "Script Finished, Now You Can Login"
 exit
