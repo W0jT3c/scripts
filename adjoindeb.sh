@@ -26,6 +26,7 @@ t_n="t"
   done
 echo "access_provider = simple" >> /etc/sssd/sssd.conf
 sudo pam-auth-update --enable mkhomedir
+systemctl restart sssd
 if [ -d /usr/share/lightdm/lightdm.conf.d/ ]; then
   if ! grep -q "greeter-show-manual-login=true" /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf &> /dev/null; then
     echo "greeter-show-manual-login=true" >> /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf
@@ -44,9 +45,8 @@ if [ -d /etc/lightdm/lightdm.conf.d/ ]; then
   fi
 fi
 if systemctl status lightdm.service &> /dev/null; then
-    systemctl restart lightdm.service
+   systemctl restart lightdm.service
 fi
-systemctl restart sssd
 t_n="t"
   while [[ "$t_n" == "t" ]]; do
     echo "Enter The Name Of The Group That Should Be In The Sudo Group(Name Displayed In Lowercase Letters With Spaces):"
@@ -59,5 +59,5 @@ t_n="t"
     read t_n
     fi
   done
-echo "Script Finished."
+echo "Script Finished, You Can Now Login To The Domain"
 exit
