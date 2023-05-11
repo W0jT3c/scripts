@@ -1,6 +1,6 @@
 #!/bin/bash
 sudo apt-get update && upgrade -y
-sudo apt-get install sssd-ad sssd-tools realmd adcli krb5-user -y
+sudo apt-get install sssd-ad sssd-tools realmd adcli krb5-user policykit-1 packagekit -y
 sudo cp /usr/lib/x86_64-linux-gnu/sssd/conf/sssd.conf /etc/sssd/
 sudo chmod 600 /etc/sssd/sssd.conf
 echo "Enter The Domain Name:"
@@ -31,10 +31,10 @@ done
 echo "access_provider = simple" >> /etc/sssd/sssd.conf
 sudo pam-auth-update --enable mkhomedir
 if [ -d /usr/share/lightdm/lightdm.conf.d/ ]; then
-  if ! grep -q "greeter-show-manual-login=true" /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf > &/dev/null; then
+  if ! grep -q "greeter-show-manual-login=true" /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf > /dev/null 2>&1; then
     echo "greeter-show-manual-login=true" >> /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf
     sed -i 'greeter-show-manual-login=false' /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf
-    if  grep -q "greeter-show-manual-login=false" /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf &> /dev/null; then
+    if  grep -q "greeter-show-manual-login=false" /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf > /dev/null 2>&1; then
     sed -i 'greeter-show-manual-login=false' /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf
     fi
   fi
@@ -47,7 +47,7 @@ if [ -d /etc/lightdm/lightdm.conf.d/ ]; then
     fi
   fi
 fi
-if systemctl status lightdm.service &> /dev/null; then
+if systemctl status lightdm.service > /dev/null 2>&1; then
     systemctl restart lightdm.service
 fi
 systemctl restart sssd
