@@ -31,19 +31,18 @@ done
 echo "access_provider = simple" >> /etc/sssd/sssd.conf
 sudo pam-auth-update --enable mkhomedir
 if [ -d /usr/share/lightdm/lightdm.conf.d/ ]; then
-  if ! grep -q "greeter-show-manual-login=true" /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf > /dev/null 2>&1; then
-    echo "greeter-show-manual-login=true" >> /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf
-    sed -i 'greeter-show-manual-login=false' /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf
-    if  grep -q "greeter-show-manual-login=false" /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf > /dev/null 2>&1; then
-    sed -i 'greeter-show-manual-login=false' /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf
+  if grep -q "greeter-show-manual-login=false" /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf > /dev/null 2>&1; then
+    sudo sed -i 's/greeter-show-manual-login=false/greeter-show-manual-login=true/' /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf
+    if ! grep -q "greeter-show-manual-login=true" /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf > /dev/null 2>&1; then
+    sed -i 'greeter-show-manual-login=true' >> /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf
     fi
   fi
 fi
 if [ -d /etc/lightdm/lightdm.conf.d/ ]; then
-  if ! grep -q "greeter-show-manual-login=true" /etc/lightdm/lightdm.conf.d/50-unity-greeter.conf; then
-    echo "greeter-show-manual-login=true" >> /etc/lightdm/lightdm.conf.d/50-unity-greeter.conf
-    if  grep -q "greeter-show-manual-login=false" /etc/lightdm/lightdm.conf.d/50-unity-greeter.conf; then
-    sed -i 'greeter-show-manual-login=false' /etc/lightdm/lightdm.conf.d/50-unity-greeter.conf
+  if grep -q "greeter-show-manual-login=false" /etc/lightdm/lightdm.conf.d/50-unity-greeter.conf; then
+    sudo sed -i 's/greeter-show-manual-login=false/greeter-show-manual-login=true/' /etc/lightdm/lightdm.conf.d/50-unity-greeter.conf
+    if ! grep -q "greeter-show-manual-login=true" /etc/lightdm/lightdm.conf.d/50-unity-greeter.conf; then
+    sed -i 'greeter-show-manual-login=true' >> /etc/lightdm/lightdm.conf.d/50-unity-greeter.conf
     fi
   fi
 fi
@@ -51,6 +50,8 @@ if systemctl status lightdm.service > /dev/null 2>&1; then
     systemctl restart lightdm.service
 fi
 systemctl restart sssd
+sudo sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+sudo systemctl restart ssh
 t_n="t"
 while [[ "$t_n" == "t" ]]; do
   echo "Enter The Name Of The Group That Should Be In The Sudo Group (Name Displayed In Lowercase Letters With Spaces):"
