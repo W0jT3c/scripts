@@ -37,7 +37,6 @@ else
    echo "krb5_validate = False" >> /etc/sssd/sssd.conf
   fi
 fi
-
 if grep -q "access_provider = simple" /etc/sssd/sssd.conf > /dev/null 2>&1; then
  sudo sed -i 's/access_provider = .*/access_provider = simple/' /etc/sssd/sssd.conf
 else
