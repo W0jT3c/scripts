@@ -28,7 +28,25 @@ while [[ "$t_n" == "t" ]]; do
   echo "Add Another Group? (t/n)"
   read t_n
 done
-echo "access_provider = simple" >> /etc/sssd/sssd.conf
+if grep -q "krb5_validate = true" /etc/sssd/sssd.conf > /dev/null 2>&1; then
+ sudo sed -i 's/krb5_validate = true/krb5_validate = False/' /etc/sssd/sssd.conf
+else
+  if grep -q "krb5_validate = false" /etc/sssd/sssd.conf > /dev/null 2>&1; then
+   break
+  else
+   echo "krb5_validate = False" >> /etc/sssd/sssd.conf
+  fi
+fi
+
+if grep -q "access_provider = simple" /etc/sssd/sssd.conf > /dev/null 2>&1; then
+ sudo sed -i 's/access_provider = .*/access_provider = simple/' /etc/sssd/sssd.conf
+else
+  if grep -q "access_provider = simple" /etc/sssd/sssd.conf > /dev/null 2>&1; then
+   break
+  else
+   echo "access_provider = simple" >> /etc/sssd/sssd.conf
+  fi
+fi
 sudo pam-auth-update --enable mkhomedir
 if [ -d /usr/share/lightdm/lightdm.conf.d/ ]; then
   if grep -q "greeter-show-manual-login=false" /usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf > /dev/null 2>&1; then
