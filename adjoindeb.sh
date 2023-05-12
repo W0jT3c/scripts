@@ -50,8 +50,6 @@ if systemctl status lightdm.service > /dev/null 2>&1; then
     systemctl restart lightdm.service
 fi
 systemctl restart sssd
-sudo sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
-sudo systemctl restart ssh
 t_n="t"
 while [[ "$t_n" == "t" ]]; do
   echo "Enter The Name Of The Group That Should Be In The Sudo Group (Name Displayed In Lowercase Letters With Spaces):"
